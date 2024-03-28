@@ -3,8 +3,14 @@ import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { HomeIcon, BoltIcon, PlusIcon } from '@heroicons/vue/24/solid';
 
-// Define a reactive array for sensors
-const sensors = ref([
+interface Sensor {
+  name: string;
+  path: string;
+  icon: any; // Use appropriate type for your icon components
+}
+
+// Define a reactive array for sensors with proper typing
+const sensors = ref<Sensor[]>([
   { name: 'Home', path: '/', icon: HomeIcon },
   { name: 'Sensor 1', path: '/sensor-1', icon: BoltIcon },
   // ... more sensors
@@ -23,7 +29,10 @@ function removeSensor(name: string) {
 
 // Function to add a placeholder sensor when the plus button is clicked
 function addPlaceholderSensor() {
-  addSensor('New Sensor', '/new-sensor');
+  // Create a unique name and path for the new sensor
+  const newSensorName = `Sensor ${sensors.value.length + 1}`;
+  const newSensorPath = `/sensor-${sensors.value.length + 1}`;
+  addSensor(newSensorName, newSensorPath);
 }
 </script>
 
