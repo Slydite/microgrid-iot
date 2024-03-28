@@ -1,85 +1,201 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue';
+import { RouterLink, RouterView } from 'vue-router';
+import { HomeIcon, BoltIcon, PlusIcon } from '@heroicons/vue/24/solid';
+
+// Define a reactive array for sensors
+const sensors = ref([
+  { name: 'Home', path: '/', icon: HomeIcon },
+  { name: 'Sensor 1', path: '/sensor-1', icon: BoltIcon },
+  // ... more sensors
+]);
+
+// Function to add a new sensor
+function addSensor(name: string, path: string) {
+  const NewIcon = BoltIcon; // Placeholder for new sensor icon
+  sensors.value.push({ name, path, icon: NewIcon });
+}
+
+// Function to remove a sensor by name
+function removeSensor(name: string) {
+  sensors.value = sensors.value.filter(sensor => sensor.name !== name);
+}
+
+// Function to add a placeholder sensor when the plus button is clicked
+function addPlaceholderSensor() {
+  addSensor('New Sensor', '/new-sensor');
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
+  <div id="app">
+    <header>
+      <h1>Microgrid</h1>
+      <input type="search" placeholder="Search..." />
+    </header>
+    <aside>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <ul>
+          <li v-for="sensor in sensors" :key="sensor.name">
+            <router-link :to="sensor.path">
+              <component :is="sensor.icon" class="icon" />
+              <span class="text">{{ sensor.name }}</span>
+            </router-link>
+          </li>
+          <!-- Plus button to add a new sensor -->
+          <li>
+            <button @click="addPlaceholderSensor">
+              <PlusIcon class="icon" />
+              <span class="text">Add Sensor</span>
+            </button>
+          </li>
+        </ul>
       </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    </aside>
+    <main>
+      <router-view />
+    </main>
+  </div>
 </template>
 
 <style scoped>
 header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-sidebar);
+  padding: 1rem;
+  z-index: 1000;
+  overflow-x: hidden;
+  /* Hide horizontal scrollbar */
 }
 
-nav a.router-link-exact-active {
+input[type="search"] {
+  margin-left: auto;
+}
+
+aside {
+  width: 50px;
+  transition: width 0.5s;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  background-color: var(--color-sidebar);
+  z-index: 500;
+}
+
+aside:hover {
+  width: 200px;
+}
+
+aside nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+aside nav ul li a,
+aside nav ul li button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  overflow: hidden;
+  text-decoration: none;
   color: var(--color-text);
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  opacity: 1;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.text {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.5s, max-width 0.5s;
+  opacity: 0;
+  max-width: 0;
 }
 
-nav a:first-of-type {
-  border: 0;
+aside:hover .text {
+  opacity: 1;
+  max-width: 100px;
 }
 
-@media (min-width: 1024px) {
+main {
+  flex: 1;
+  padding: 1rem;
+  margin-left: 50px;
+  margin-top: 4rem;
+  transition: margin-left 0.5s;
+}
+
+/* Update colors */
+aside nav ul li a,
+aside nav ul li button {
+  color: grey;
+  /* Updated text color */
+}
+
+aside nav ul li button {
+  background-color: black;
+  /* Updated background color */
+}
+
+/* Green color for list items */
+aside nav ul li a .icon {
+  color: green;
+}
+
+@media (max-width: 768px) {
   header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    position: relative;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
+  aside {
+    width: 100%;
+    height: auto;
+    position: relative;
+    top: auto;
+    overflow-y: visible;
   }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  aside nav ul {
+    flex-direction: row;
+    justify-content: space-around;
   }
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+  aside nav ul li a,
+  aside nav ul li button {
+    flex-direction: column;
+  }
 
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .icon {
+    margin: 0;
+    margin-bottom: 4px;
+  }
+
+  .text {
+    display: block;
+    font-size: 0.75rem;
+    max-width: none;
+    opacity: 1;
+  }
+
+  main {
+    margin-left: 0;
+    margin-top: 60px;
   }
 }
 </style>
