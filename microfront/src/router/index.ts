@@ -8,7 +8,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 //       path: '/',
 //       name: 'home',
 //       component: HomeView
-//     },
+//     }
 
 //   ]
 // })
