@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Ref } from 'vue';
+
 import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { HomeIcon, BoltIcon, PlusIcon } from '@heroicons/vue/24/solid';
@@ -9,8 +11,8 @@ interface Sensor {
   icon: any; // Use appropriate type for your icon components
 }
 
-// Define a reactive array for sensors with proper typing
-const sensors = ref<Sensor[]>([
+
+const sensors: Ref<Array<Sensor>> = ref([
   { name: 'Home', path: '/', icon: HomeIcon },
   { name: 'Sensor 1', path: '/sensor-1', icon: BoltIcon },
   // ... more sensors
@@ -24,7 +26,7 @@ function addSensor(name: string, path: string) {
 
 // Function to remove a sensor by name
 function removeSensor(name: string) {
-  sensors.value = sensors.value.filter(sensor => sensor.name !== name);
+  sensors.value = sensors.value.filter((sensor: Sensor) => sensor.name !== name);
 }
 
 // Function to add a placeholder sensor when the plus button is clicked
@@ -35,7 +37,6 @@ function addPlaceholderSensor() {
   addSensor(newSensorName, newSensorPath);
 }
 </script>
-
 <template>
   <div id="app">
     <header>
@@ -164,7 +165,7 @@ aside nav ul li button {
 
 /* Green color for list items */
 aside nav ul li a .icon {
-  color: green;
+  color: rgb(26, 241, 26);
 }
 
 @media (max-width: 768px) {

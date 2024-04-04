@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Vue App",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/microfront",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+        },
+        {
+            "name": "Launch Django Backend",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/microback",
+            "program": "${workspaceFolder}/microback/manage.py",
+            "args": [
+                "runserver"
+            ],
+            "env": {
+                "PYTHONUNBUFFERED": "1"
+            },
+            "console": "integratedTerminal",
+            "preLaunchTask": "migrate"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch Full Stack",
+            "configurations": [
+                "Launch Vue App",
+                "Launch Django Backend"
+            ]
+        }
+    ]
+}
