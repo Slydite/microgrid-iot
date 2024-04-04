@@ -17,6 +17,9 @@ dependencies:
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(typescript@5.4.4)(vue@3.4.21)
+  pnpm:
+    specifier: ^8.15.6
+    version: 8.15.6
   vue:
     specifier: ^3.4.21
     version: 3.4.21(typescript@5.4.4)
@@ -31,10 +34,7 @@ devDependencies:
   '@rushstack/eslint-patch':
     specifier: ^1.10.1
     version: 1.10.1
-    specifier: ^1.10.1
-    version: 1.10.1
   '@tsconfig/node20':
-    specifier: ^20.1.4
     specifier: ^20.1.4
     version: 20.1.4
   '@types/jsdom':
@@ -60,10 +60,8 @@ devDependencies:
     version: 0.5.1
   eslint:
     specifier: ^8.57.0
-    specifier: ^8.57.0
     version: 8.57.0
   eslint-plugin-vue:
-    specifier: ^9.24.0
     specifier: ^9.24.0
     version: 9.24.0(eslint@8.57.0)
   jsdom:
@@ -73,7 +71,6 @@ devDependencies:
     specifier: ^6.1.2
     version: 6.1.2
   prettier:
-    specifier: ^3.2.5
     specifier: ^3.2.5
     version: 3.2.5
   typescript:
@@ -940,8 +937,6 @@ packages:
 
   /@rushstack/eslint-patch@1.10.1:
     resolution: {integrity: sha512-S3Kq8e7LqxkA9s7HKLqXGTGck1uwis5vAXan3FnU5yw1Ec5hsSGnq4s/UCaSqABPOnOTg7zASLyst7+ohgWexg==}
-  /@rushstack/eslint-patch@1.10.1:
-    resolution: {integrity: sha512-S3Kq8e7LqxkA9s7HKLqXGTGck1uwis5vAXan3FnU5yw1Ec5hsSGnq4s/UCaSqABPOnOTg7zASLyst7+ohgWexg==}
     dev: true
 
   /@sinclair/typebox@0.27.8:
@@ -1347,7 +1342,6 @@ packages:
       '@vue/shared': 3.4.21
       computeds: 0.0.1
       minimatch: 9.0.4
-      minimatch: 9.0.4
       path-browserify: 1.0.1
       typescript: 5.4.4
       vue-template-compiler: 2.7.16
@@ -1422,8 +1416,6 @@ packages:
     hasBin: true
     dev: true
 
-  /agent-base@7.1.1:
-    resolution: {integrity: sha512-H0TSyFNDMomMNJQBn8wFV5YC/2eJ+VXECwOadZJT554xP6cODZHPX3H9QMQECxvrgiSOP1pHjy1sMWQVYJOUOA==}
   /agent-base@7.1.1:
     resolution: {integrity: sha512-H0TSyFNDMomMNJQBn8wFV5YC/2eJ+VXECwOadZJT554xP6cODZHPX3H9QMQECxvrgiSOP1pHjy1sMWQVYJOUOA==}
     engines: {node: '>= 14'}
@@ -2151,14 +2143,11 @@ packages:
 
   /glob@10.3.12:
     resolution: {integrity: sha512-TCNv8vJ+xz4QiqTpfOJA7HvYv+tNIRHKfUWw/q+v2jdgN4ebz+KY9tGx5J4rHP0o84mNP+ApH66HRX8us3Khqg==}
-  /glob@10.3.12:
-    resolution: {integrity: sha512-TCNv8vJ+xz4QiqTpfOJA7HvYv+tNIRHKfUWw/q+v2jdgN4ebz+KY9tGx5J4rHP0o84mNP+ApH66HRX8us3Khqg==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 2.3.6
-      minimatch: 9.0.4
       minimatch: 9.0.4
       minipass: 7.0.4
       path-scurry: 1.10.2
@@ -2243,7 +2232,6 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.1
-      agent-base: 7.1.1
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
@@ -2253,7 +2241,6 @@ packages:
     resolution: {integrity: sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==}
     engines: {node: '>= 14'}
     dependencies:
-      agent-base: 7.1.1
       agent-base: 7.1.1
       debug: 4.3.4
     transitivePeerDependencies:
@@ -2383,7 +2370,6 @@ packages:
       config-chain: 1.1.13
       editorconfig: 1.0.4
       glob: 10.3.12
-      glob: 10.3.12
       js-cookie: 3.0.5
       nopt: 7.2.0
     dev: true
@@ -2397,8 +2383,6 @@ packages:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
     dev: true
 
-  /js-tokens@9.0.0:
-    resolution: {integrity: sha512-WriZw1luRMlmV3LGJaR6QOJjWwgLUTf89OwT2lUOyjX2dJGBwgmIkbcz+7WFZjrZM635JOIR517++e/67CP9dQ==}
   /js-tokens@9.0.0:
     resolution: {integrity: sha512-WriZw1luRMlmV3LGJaR6QOJjWwgLUTf89OwT2lUOyjX2dJGBwgmIkbcz+7WFZjrZM635JOIR517++e/67CP9dQ==}
     dev: true
@@ -2624,13 +2608,6 @@ packages:
       brace-expansion: 2.0.1
     dev: true
 
-  /minimatch@9.0.4:
-    resolution: {integrity: sha512-KqWh+VchfxcMNRAJjj2tnsSJdNbHsVgnkBhTNrW7AjVo6OvLtxw8zfT9oLw1JSohlFzJ8jCoTgaoXvJ+kHt6fw==}
-    engines: {node: '>=16 || 14 >=14.17'}
-    dependencies:
-      brace-expansion: 2.0.1
-    dev: true
-
   /minipass@7.0.4:
     resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -2700,7 +2677,6 @@ packages:
       ansi-styles: 6.2.1
       cross-spawn: 7.0.3
       memorystream: 0.3.1
-      minimatch: 9.0.4
       minimatch: 9.0.4
       pidtree: 0.6.0
       read-package-json-fast: 3.0.2
@@ -2881,6 +2857,12 @@ packages:
       mlly: 1.6.1
       pathe: 1.1.2
     dev: true
+
+  /pnpm@8.15.6:
+    resolution: {integrity: sha512-d7iem+d6Kwatj0A6Gcrl4il29hAj+YrTI9XDAZSVjrwC7gpq5dE+5FT2E05OjK8poF8LGg4dKxe8prah8RWfhg==}
+    engines: {node: '>=16.14'}
+    hasBin: true
+    dev: false
 
   /postcss-selector-parser@6.0.16:
     resolution: {integrity: sha512-A0RVJrX+IUkVZbW3ClroRWurercFhieevHB38sr2+l9eUClMqome3LmEmnhlNy+5Mr2EYN6B2Kaw9wYdd+VHiw==}
@@ -3147,10 +3129,7 @@ packages:
 
   /strip-literal@2.1.0:
     resolution: {integrity: sha512-Op+UycaUt/8FbN/Z2TWPBLge3jWrP3xj10f3fnYxf052bKuS3EKs1ZQcVGjnEMdsNVAM+plXRdmjrZ/KgG3Skw==}
-  /strip-literal@2.1.0:
-    resolution: {integrity: sha512-Op+UycaUt/8FbN/Z2TWPBLge3jWrP3xj10f3fnYxf052bKuS3EKs1ZQcVGjnEMdsNVAM+plXRdmjrZ/KgG3Skw==}
     dependencies:
-      js-tokens: 9.0.0
       js-tokens: 9.0.0
     dev: true
 
@@ -3541,7 +3520,6 @@ packages:
       pathe: 1.1.2
       picocolors: 1.0.0
       std-env: 3.7.0
-      strip-literal: 2.1.0
       strip-literal: 2.1.0
       tinybench: 2.6.0
       tinypool: 0.8.3
