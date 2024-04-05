@@ -1,6 +1,6 @@
 <template>
   <div class="sensor">
-    <h1>Recent Sensor Data</h1>
+    <h1>Recent Sensor Data for {{ sensorName }}</h1>
     <!-- Table for sensor data -->
     <div class="sensor-table">
       <table>
@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="data in sensorData" :key="data.id">
+          <tr v-for="data in getSensorData(sensorName)" :key="data.id">
             <td>{{ data.current }}</td>
             <td>{{ data.voltage }}</td>
             <td>{{ data.powerFactor }}</td>
@@ -29,21 +29,30 @@
   </div>
 </template>
 
-
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import ApexCharts from 'apexcharts';
 
 export default defineComponent({
   name: 'SensorView',
   setup() {
-    // Synthetic data for sensor readings
-    const sensorData = ref([
-      { id: 1, current: 5.2, voltage: 220, powerFactor: 0.95, thd: 5 },
-      { id: 2, current: 5.4, voltage: 225, powerFactor: 0.96, thd: 4 },
-      { id: 3, current: 5.6, voltage: 230, powerFactor: 0.97, thd: 6 },
-      { id: 4, current: 5.8, voltage: 235, powerFactor: 0.98, thd: 3 }
-    ]);
+    const route = useRoute();
+    const sensorName = computed(() => route.query.name as string);
+
+    // Function to get synthetic sensor data
+    const getSensorData = (name: string) => {
+      // Replace this synthetic data with your GraphQL API call
+      const syntheticData = [
+        { id: 1, current: 5.2, voltage: 220, powerFactor: 0.95, thd: 5 },
+        { id: 2, current: 5.4, voltage: 225, powerFactor: 0.96, thd: 4 },
+        { id: 3, current: 5.6, voltage: 230, powerFactor: 0.97, thd: 6 },
+        { id: 4, current: 5.8, voltage: 235, powerFactor: 0.98, thd: 3 }
+      ];
+      // TODO: Uncomment and modify the following line when integrating with GraphQL
+      // const actualData = await fetchSensorData(name);
+      return syntheticData;
+    };
 
     // Initialize the chart
     const initChart = () => {
@@ -57,7 +66,7 @@ export default defineComponent({
           }
         },
         series: [{
-          name: 'sales', data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+          name: 'sales', data: [30, 40, 35, 50, 49, 60, 70, 91, 1]
         }],
         xaxis: {
           categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
@@ -76,12 +85,10 @@ export default defineComponent({
       initChart();
     });
 
-    return { sensorData };
+    return { sensorName, getSensorData };
   }
 });
 </script>
-
-
 <style scoped>
 .sensor {
   padding: 1rem;

@@ -95,7 +95,7 @@ DATABASES = {
         "NAME": "sensors",
         "USER": "sensor2",
         "PASSWORD": "microgrid",
-        "HOST": "127.0.0.1",
+        "HOST": "192.168.155.157",
         "PORT": "5432",
     }
 }
