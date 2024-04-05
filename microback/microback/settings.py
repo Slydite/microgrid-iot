@@ -92,15 +92,14 @@ ASGI_APPLICATION = 'microback.asgi.application'
 #    }
 #}
 DATABASES = {
-    "default": {
+     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "sensors",
         "USER": "sensor2",
         "PASSWORD": "microgrid",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "HOST": "192.168.155.157",
+        "PORT": "5432",}
     }
-}
 
 
 # Password validation
