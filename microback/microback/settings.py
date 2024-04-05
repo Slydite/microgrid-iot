@@ -35,6 +35,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+GRAPHENE = {
+    'SCHEMA': 'microgrid_back.schema.schema'  # Replace 'yourapp' with the actual app name
+}
 
 
 

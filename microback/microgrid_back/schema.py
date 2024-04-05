@@ -48,6 +48,11 @@ def send_measurement_subscription(sender, instance, **kwargs):
 
 # Define the GraphQL Query and Subscription
 class Query(ObjectType):
-    pass
+    all_measurements_one = List(MeasurementOneType)
+
+    # Resolver for all_measurements_one
+    def resolve_all_measurements_one(root, info):
+        # Query all MeasurementsOne objects
+        return MeasurementsOne.objects.all()
 
 schema = graphene.Schema(query=Query, subscription=Subscription)
