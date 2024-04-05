@@ -1,0 +1,13 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "migrate",
+            "type": "shell",
+            "command": "python manage.py makemigrations && python manage.py migrate",
+            "options": {
+                "cwd": "${workspaceFolder}/microback"
+            }
+        }
+    ]
+}

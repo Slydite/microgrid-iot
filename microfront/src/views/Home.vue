@@ -29,11 +29,12 @@
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from 'vue';
+
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
 import ApexCharts from 'apexcharts';
 
-export default {
+export default defineComponent({
   name: 'HomeView',
   setup() {
     // Synthetic data for sensor readings
@@ -56,8 +57,7 @@ export default {
           }
         },
         series: [{
-          name: 'sales',
-          data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+          name: 'sales', data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
         }],
         xaxis: {
           categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
@@ -78,8 +78,9 @@ export default {
 
     return { sensorData };
   }
-}
+});
 </script>
+
 
 <style scoped>
 .home {
