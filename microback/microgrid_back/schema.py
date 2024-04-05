@@ -1,88 +1,53 @@
-# import graphene
-# from graphene_django.types import DjangoObjectType
-# from .models import Measurements
+import graphene
+from graphene import ObjectType, String, Int, List, Field
+from graphene_django.types import DjangoObjectType
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import MeasurementsOne, MeasurementsTwo, MeasurementsThree, MeasurementsFour, MeasurementsFive, MeasurementsSix
 
-# class MeasurementsType(DjangoObjectType):
-#     class Meta:
-#         model = Measurements
+# Define GraphQL types for Django models
+class MeasurementOneType(DjangoObjectType):
+    class Meta:
+        model = MeasurementsOne
 
-# class Query(graphene.ObjectType):
-#     all_measurements = graphene.List(MeasurementsType)
+class MeasurementTwoType(DjangoObjectType):
+    class Meta:
+        model = MeasurementsTwo
 
-#     def resolve_all_measurements(self, info):
-#         return Measurements.objects.all()
+class MeasurementThreeType(DjangoObjectType):
+    class Meta:
+        model = MeasurementsThree
 
-# class CreateMeasurement(graphene.Mutation):
-#     class Arguments:
-#         voltage = graphene.Float(required=True)
+class MeasurementFourType(DjangoObjectType):
+    class Meta:
+        model = MeasurementsFour
 
-#     measurement = graphene.Field(MeasurementsType)
+class MeasurementFiveType(DjangoObjectType):
+    class Meta:
+        model = MeasurementsFive
 
-#     def mutate(self, info, voltage):
-#         measurement = Measurements.objects.create(voltage=voltage)
-#         return CreateMeasurement(measurement=measurement)
+class MeasurementSixType(DjangoObjectType):
+    class Meta:
+        model = MeasurementsSix
 
-# class UpdateMeasurement(graphene.Mutation):
-#     class Arguments:
-#         id = graphene.Int(required=True)
-#         voltage = graphene.Float(required=True)
+# Define a class to handle subscription field
+class Subscription(ObjectType):
+    measurement_subscription = Field(MeasurementOneType)
 
-#     measurement = graphene.Field(MeasurementsType)
-#     def mutate(self, info, voltage):
-#         measurement = Measurements.objects.create(voltage=voltage)
-#         return CreateMeasurement(measurement=measurement)
+# Define a subscription resolver function
+def resolve_measurement_subscription(root, info, sensor_id):
+    async def generator():
+        async for measurement in MeasurementsOne.objects.filter(sensor_id=sensor_id):
+            yield measurement
+    return generator()
 
-# class UpdateMeasurement(graphene.Mutation):
-#     class Arguments:
-#         id = graphene.Int(required=True)
-#         voltage = graphene.Float(required=True)
+# Register subscription to Django model post_save signal
+@receiver(post_save, sender=MeasurementsOne)
+def send_measurement_subscription(sender, instance, **kwargs):
+    Subscription.broadcast(payload={"measurement": instance}, group=instance.sensor_id)
 
-#     measurement = graphene.Field(MeasurementsType)
+# Define the GraphQL Query and Subscription
+class Query(ObjectType):
+    pass
 
-#     def mutate(self, info, id, voltage):
-#         measurement = Measurements.objects.get(pk=id)
-#         measurement.voltage = voltage
-#         measurement.save()
-#         return UpdateMeasurement(measurement=measurement)
-
-# class DeleteMeasurement(graphene.Mutation):
-#     class Arguments:
-#         id = graphene.Int(required=True)
-
-#     ok = graphene.Boolean()
-
-#     def mutate(self, info, id):
-#         measurement = Measurements.objects.get(pk=id)
-#         measurement.delete()
-#         return DeleteMeasurement(ok=True)
-
-# class Mutation(graphene.ObjectType):
-#     create_measurement = CreateMeasurement.Field()
-#     update_measurement = UpdateMeasurement.Field()
-#     delete_measurement = DeleteMeasurement.Field()
-
-# schema = graphene.Schema(query=Query, mutation=Mutation)
-
-#     def mutate(self, info, id, voltage):
-#         measurement = Measurements.objects.get(pk=id)
-#         measurement.voltage = voltage
-#         measurement.save()
-#         return UpdateMeasurement(measurement=measurement)
-
-# class DeleteMeasurement(graphene.Mutation):
-#     class Arguments:
-#         id = graphene.Int(required=True)
-
-#     ok = graphene.Boolean()
-
-#     def mutate(self, info, id):
-#         measurement = Measurements.objects.get(pk=id)
-#         measurement.delete()
-#         return DeleteMeasurement(ok=True)
-
-# class Mutation(graphene.ObjectType):
-#     create_measurement = CreateMeasurement.Field()
-#     update_measurement = UpdateMeasurement.Field()
-#     delete_measurement = DeleteMeasurement.Field()
-
-# schema = graphene.Schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=Query, subscription=Subscription)
