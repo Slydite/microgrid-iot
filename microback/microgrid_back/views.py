@@ -22,7 +22,7 @@ from .models import Measurements
 @csrf_exempt
 def all_measurements(request):
     if request.method == 'GET':
-        measurements = Measurements.objects.all()
+        measurements = Measurements.objects.filter(id=1)
         data = [{'voltage': measurement.voltage, 'time': measurement.time} for measurement in measurements]
         return JsonResponse({'measurements': data})
 
