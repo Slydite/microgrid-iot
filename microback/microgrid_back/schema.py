@@ -1,9 +1,11 @@
 import graphene
-from graphene import ObjectType, String, Int, List, Field
+from graphene import Field  # Import Field from graphene module
+
 from graphene_django.types import DjangoObjectType
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import MeasurementsOne, MeasurementsTwo, MeasurementsThree, MeasurementsFour, MeasurementsFive, MeasurementsSix
+import asyncio
 
 # Define GraphQL types for Django models
 class MeasurementOneType(DjangoObjectType):
@@ -30,24 +32,22 @@ class MeasurementSixType(DjangoObjectType):
     class Meta:
         model = MeasurementsSix
 
-# Define a class to handle subscription field
-class Subscription(ObjectType):
-    measurement_subscription = Field(MeasurementOneType)
+async def get_latest_measurement():
+    # Fetch the latest measurement asynchronously
+    try:
+        latest_measurement = await asyncio.to_thread(MeasurementsOne.objects.latest, 'time')
+        return latest_measurement
+    except MeasurementsOne.DoesNotExist:
+        return None
 
-# Define a subscription resolver function
-def resolve_measurement_subscription(root, info, sensor_id):
-    async def generator():
-        async for measurement in MeasurementsOne.objects.filter(sensor_id=sensor_id):
-            yield measurement
-    return generator()
+class MeasurementTypeOneSubscription(graphene.ObjectType):
+    measurement_one = Field(MeasurementOneType)
 
-# Register subscription to Django model post_save signal
-@receiver(post_save, sender=MeasurementsOne)
-def send_measurement_subscription(sender, instance, **kwargs):
-    Subscription.broadcast(payload={"measurement": instance}, group=instance.sensor_id)
+    async def resolve_measurement_one(root, info):
+        # Your logic to fetch real-time data from MeasurementsOne table goes here
+        # For example:
+        latest_measurement = await asyncio.to_thread(MeasurementsOne.objects.latest, 'time')
+        return latest_measurement
 
-# Define the GraphQL Query and Subscription
-class Query(ObjectType):
-    pass
-
-schema = graphene.Schema(query=Query, subscription=Subscription)
+# Assuming you already have Query and Mutation defined in your schema
+schema = graphene.Schema(subscription=MeasurementTypeOneSubscription)
