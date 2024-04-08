@@ -22,7 +22,6 @@
     "clusterize.js": "^1.0.0",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
-    "graphql-ws": "^5.16.0",
     "pinia": "^2.1.7",
     "pnpm": "^8.15.6",
     "vue": "^3.4.21",
