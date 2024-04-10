@@ -27,6 +27,8 @@ GRAPHENE = {
 
 
 INSTALLED_APPS = [
+    "daphne",
+    "graphene_subscriptions",
     "graphene_django",
     'microgrid_back',
     'django.contrib.admin',
@@ -69,26 +71,39 @@ TEMPLATES = [
 WSGI_APPLICATION = 'microback.wsgi.application'
 ASGI_APPLICATION = 'microback.asgi.application'
 
+# DATABASES = {
+#      "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "sensors",
+#         "USER": "sensor2",
+#         "PASSWORD": "microgrid",
+#         "HOST": "192.168.155.157",
+#         "PORT": "5432",}
+#     }
 DATABASES = {
      "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "sensors",
-        "USER": "sensor2",
+        "USER": "postgres",
         "PASSWORD": "microgrid",
-        "HOST": "192.168.155.157",
+        "HOST": "localhost",
         "PORT": "5432",}
-    }
-
-# Use Redis as the channel layer backend for Django Channels
+     }
+# # Use Redis as the channel layer backend for Django Channels
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],  # Update with your Redis server details
+#         },
+#     },
+# }
+# your_project/settings.py
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],  # Update with your Redis server details
-        },
-    },
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
