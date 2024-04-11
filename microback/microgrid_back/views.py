@@ -1,17 +1,17 @@
-# views.py
-#from django.shortcuts import render
-#from .models import Measurements
+# # views.py
+# #from django.shortcuts import render
+# #from .models import Measurements
 
-#def print_measurements(request):
-    # Query the database to retrieve data from Measurements
-#    measurements = Measurements.objects.all()
+# #def print_measurements(request):
+#     # Query the database to retrieve data from Measurements
+# #    measurements = Measurements.objects.all()
     
-    # Print the data
-#    for measurement in measurements:
-#        print(f"Voltage: {measurement.voltage}, Time: {measurement.time}")
+#     # Print the data
+# #    for measurement in measurements:
+# #        print(f"Voltage: {measurement.voltage}, Time: {measurement.time}")
     
-#    return render(request, 'measurements.html', {'measurements': measurements})
-# microback/micro_back/views.py
+# #    return render(request, 'measurements.html', {'measurements': measurements})
+# # microback/micro_back/views.py
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt

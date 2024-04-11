@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { RouterLink, RouterView } from 'vue-router';
+import { ref, type Ref } from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { HomeIcon, BoltIcon, PlusIcon } from '@heroicons/vue/24/solid';
 
 interface Sensor {
@@ -9,17 +9,16 @@ interface Sensor {
   icon: any; // Use appropriate type for your icon components
 }
 
-// Define a reactive array for sensors with proper typing
-const sensors = ref<Sensor[]>([
+const sensors: Ref<Array<Sensor>> = ref([
   { name: 'Home', path: '/', icon: HomeIcon },
-  { name: 'Sensor 1', path: '/sensor-1', icon: BoltIcon },
+  { name: 'Sensor 1', path: '/sensor', icon: BoltIcon },
   // ... more sensors
 ]);
 
 // Function to add a new sensor
-function addSensor(name: string, path: string) {
+function addSensor(name: string) {
   const NewIcon = BoltIcon; // Placeholder for new sensor icon
-  sensors.value.push({ name, path, icon: NewIcon });
+  sensors.value.push({ name, path: '/sensor', icon: NewIcon });
 }
 
 // Function to remove a sensor by name
@@ -29,11 +28,11 @@ function removeSensor(name: string) {
 
 // Function to add a placeholder sensor when the plus button is clicked
 function addPlaceholderSensor() {
-  // Create a unique name and path for the new sensor
   const newSensorName = `Sensor ${sensors.value.length + 1}`;
-  const newSensorPath = `/sensor-${sensors.value.length + 1}`;
-  addSensor(newSensorName, newSensorPath);
+  addSensor(newSensorName);
 }
+
+const route = useRoute();
 </script>
 
 <template>
@@ -46,7 +45,8 @@ function addPlaceholderSensor() {
       <nav>
         <ul>
           <li v-for="sensor in sensors" :key="sensor.name">
-            <router-link :to="sensor.path">
+            <!-- Pass the sensor name as a route query parameter -->
+            <router-link :to="{ path: sensor.path, query: { name: sensor.name } }">
               <component :is="sensor.icon" class="icon" />
               <span class="text">{{ sensor.name }}</span>
             </router-link>
@@ -66,6 +66,7 @@ function addPlaceholderSensor() {
     </main>
   </div>
 </template>
+
 
 <style scoped>
 header {
@@ -164,7 +165,7 @@ aside nav ul li button {
 
 /* Green color for list items */
 aside nav ul li a .icon {
-  color: green;
+  color: rgb(26, 241, 26);
 }
 
 @media (max-width: 768px) {
