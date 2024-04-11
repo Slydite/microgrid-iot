@@ -1,100 +1,205 @@
 <template>
   <div class="sensor">
-    <h1>Recent Sensor Data for {{ sensorName }}</h1>
+    <h1>Recent Sensor Data</h1>
     <!-- Table for sensor data -->
     <div class="sensor-table">
       <table>
         <thead>
           <tr>
-            <th>RMS Current (A)</th>
+            <th>Time</th>
             <th>Voltage (V)</th>
-            <th>Power Factor</th>
-            <th>THD (%)</th>
-            <!-- Add more columns as needed -->
           </tr>
         </thead>
         <tbody>
-          <tr v-for="data in getSensorData(sensorName)" :key="data.id">
-            <td>{{ data.current }}</td>
-            <td>{{ data.voltage }}</td>
-            <td>{{ data.powerFactor }}</td>
-            <td>{{ data.thd }}</td>
-            <!-- Add more data cells as needed -->
+          <tr v-for="measurement in measurements" :key="measurement.time">
+            <td>{{ measurement.time }}</td>
+            <td>{{ measurement.voltage }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- ApexCharts example -->
-    <div id="chart"></div>
+    <!-- Static ApexCharts example -->
+    <div id="staticChart"></div>
+    <!-- Live ApexCharts example -->
+    <div id="liveChart"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import ApexCharts from 'apexcharts';
+import { defineComponent, ref, onMounted} from 'vue';
+import type { Ref } from 'vue';
+import axios from 'axios';
+import ApexCharts, { type ApexOptions } from 'apexcharts';
+
+interface Measurement {
+  time: string;
+  voltage: string;
+}
 
 export default defineComponent({
   name: 'SensorView',
   setup() {
-    const route = useRoute();
-    const sensorName = computed(() => route.query.name as string);
+    const measurements: Ref<Measurement[]> = ref([]);
+    const staticChart: Ref<ApexCharts | null> = ref(null);
+    const liveChart: Ref<ApexCharts | null> = ref(null);
 
-    // Function to get synthetic sensor data
-    const getSensorData = (name: string) => {
-      // Replace this synthetic data with your GraphQL API call
-      const syntheticData = [
-        { id: 1, current: 5.2, voltage: 220, powerFactor: 0.95, thd: 5 },
-        { id: 2, current: 5.4, voltage: 225, powerFactor: 0.96, thd: 4 },
-        { id: 3, current: 5.6, voltage: 230, powerFactor: 0.97, thd: 6 },
-        { id: 4, current: 5.8, voltage: 235, powerFactor: 0.98, thd: 3 }
-      ];
-      // TODO: Uncomment and modify the following line when integrating with GraphQL
-      // const actualData = await fetchSensorData(name);
-      return syntheticData;
+    // Function to fetch sensor data from the backend
+    const fetchSensorData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/microgrid_back/measurements/1/6/');
+        measurements.value = response.data.measurements;
+        updateStaticChart();
+      } catch (error) {
+        console.error('Error during Axios GET request:', error);
+      }
     };
 
-    // Initialize the chart
-    const initChart = () => {
-      const options = {
+    // Initialize the static chart with empty data
+    const initStaticChart = () => {
+      const options: ApexOptions = {
         chart: {
           type: 'line',
           height: 'auto',
-          foreColor: '#fff',
+          zoom: {
+            enabled: true,
+            type: 'x',  
+            autoScaleYaxis: true  
+          },
           toolbar: {
-            show: false
+            autoSelected: 'zoom' 
           }
         },
         series: [{
-          name: 'sales', data: [30, 40, 35, 50, 49, 60, 70, 91, 1]
+          name: 'Voltage',
+          data: []
         }],
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+          type: 'datetime',
+          labels: {
+    formatter: function(value, timestamp) {
+      // Check if timestamp is defined to avoid TypeScript error
+      if (typeof timestamp !== 'undefined') {
+        return new Date(timestamp).toISOString().slice(17, 23); // Display only the seconds and microseconds
+      }
+      return ''; // Return an empty string or some default value if timestamp is undefined
+    }
+  },
+          tickAmount: 10, // Adjust this value as needed for your data
+          range: 1000 // This will need to be adjusted based on the actual range of your data
+        },
+        tooltip: {
+          x: {
+            format: 'HH:mm:ss.SSS' // Format tooltip to show hours, minutes, seconds, and milliseconds
+          }
         },
         theme: {
-          mode: 'dark',
-          palette: 'palette7'
+          mode: 'dark'
         }
       };
 
-      const chart = new ApexCharts(document.querySelector("#chart"), options);
-      chart.render();
+      staticChart.value = new ApexCharts(document.querySelector("#staticChart"), options);
+      staticChart.value.render();
     };
 
-    onMounted(() => {
-      initChart();
+    // Update the static chart with new data
+    const updateStaticChart = () => {
+  if (staticChart.value) {
+    const seriesData = measurements.value.map(m => {
+      // Ensure that m.time is not undefined
+      const time = m.time ? new Date(m.time) : new Date();
+      return {
+        x: time,
+        y: parseFloat(m.voltage)
+      };
     });
 
-    return { sensorName, getSensorData };
+    staticChart.value.updateSeries([{ data: seriesData }]);
+  }
+};
+
+    // Initialize the live chart with empty data
+    const initLiveChart = () => {
+      const options: ApexOptions = {
+        chart: {
+          type: 'line',
+          height: 'auto',
+          animations: {
+            enabled: true,
+            dynamicAnimation: {
+              speed: 1000
+            }
+          }
+        },
+        series: [{
+          name: 'Live Voltage',
+          data: []
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: {
+    formatter: function(value, timestamp) {
+      // Check if timestamp is defined to avoid TypeScript error
+      if (typeof timestamp !== 'undefined') {
+        return new Date(timestamp).toISOString().slice(17, 23); // Display only the seconds and microseconds
+      }
+      return ''; // Return an empty string or some default value if timestamp is undefined
+    }
+  },
+          tickAmount: 1, // Adjust this value as needed for your data
+          range: 10 // This will need to be adjusted based on the actual range of your data
+        },
+        tooltip: {
+          x: {
+            format: 'HH:mm:ss.SSS' // Format tooltip to show hours, minutes, seconds, and milliseconds
+          }
+        },
+        theme: {
+          mode: 'dark'
+        }
+      };
+
+      liveChart.value = new ApexCharts(document.querySelector("#liveChart"), options);
+      liveChart.value.render();
+    };
+
+// Poll for live data every second and update the live chart
+const pollLiveData = () => {
+  setInterval(async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/microgrid_back/measurements/1/6/');
+      const latestMeasurement = response.data.measurements[response.data.measurements.length - 1];
+      if (liveChart.value && latestMeasurement.time) {
+        const time = new Date(latestMeasurement.time);
+        const voltage = parseFloat(latestMeasurement.voltage);
+        liveChart.value.appendData([{
+          data: [{ x: time, y: voltage }]
+        }]);
+      }
+    } catch (error) {
+      console.error('Error during live data polling:', error);
+    }
+  }, 5000);
+};
+
+    onMounted(() => {
+      initStaticChart();
+      initLiveChart();
+      fetchSensorData();
+      pollLiveData();
+    });
+
+    return { measurements, staticChart, liveChart };
   }
 });
 </script>
+
+
 <style scoped>
-.sensor {
+.home {
   padding: 1rem;
 }
 
-.sensor-table {
+.home-table {
   margin-top: 2rem;
 }
 
@@ -116,7 +221,7 @@ th {
 }
 
 @media (max-width: 768px) {
-  .sensor {
+  .home {
     padding: 0.5rem;
   }
 

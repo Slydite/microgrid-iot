@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router';
 
-import HomeView from '../views/Home.vue'
-import SensorView from '../views/Sensor.vue'
 
+import SensorView from '../views/Sensor.vue'
+import HomeView from '../views/Home.vue'
 const routes: Array<RouteRecordRaw> = [
+
     {
-        path: '/',
+        path: '/home', // Added this line to handle '/home' path
         name: 'home',
         component: HomeView
     },

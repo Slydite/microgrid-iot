@@ -1,0 +1,177 @@
+Sensor.vue:3 [Vue warn]: Property "sensorName" was accessed during render but is not defined on instance. 
+  at <SensorView name="Sensor 1" onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< null > > 
+  at <RouterView> 
+  at <App>
+warn$1 @ chunk-2FDUVFJ5.js?v=d02d6958:1513
+get @ chunk-2FDUVFJ5.js?v=d02d6958:4556
+_sfc_render @ Sensor.vue:3
+renderComponentRoot @ chunk-2FDUVFJ5.js?v=d02d6958:2343
+componentUpdateFn @ chunk-2FDUVFJ5.js?v=d02d6958:7455
+run @ chunk-2FDUVFJ5.js?v=d02d6958:430
+instance.update @ chunk-2FDUVFJ5.js?v=d02d6958:7586
+setupRenderEffect @ chunk-2FDUVFJ5.js?v=d02d6958:7596
+mountComponent @ chunk-2FDUVFJ5.js?v=d02d6958:7364
+processComponent @ chunk-2FDUVFJ5.js?v=d02d6958:7318
+patch @ chunk-2FDUVFJ5.js?v=d02d6958:6784
+componentUpdateFn @ chunk-2FDUVFJ5.js?v=d02d6958:7542
+run @ chunk-2FDUVFJ5.js?v=d02d6958:430
+instance.update @ chunk-2FDUVFJ5.js?v=d02d6958:7586
+callWithErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1660
+flushJobs @ chunk-2FDUVFJ5.js?v=d02d6958:1866
+Promise.then (async)
+queueFlush @ chunk-2FDUVFJ5.js?v=d02d6958:1775
+queueJob @ chunk-2FDUVFJ5.js?v=d02d6958:1769
+(anonymous) @ chunk-2FDUVFJ5.js?v=d02d6958:7580
+resetScheduling @ chunk-2FDUVFJ5.js?v=d02d6958:513
+triggerEffects @ chunk-2FDUVFJ5.js?v=d02d6958:557
+triggerRefValue @ chunk-2FDUVFJ5.js?v=d02d6958:1317
+set value @ chunk-2FDUVFJ5.js?v=d02d6958:1362
+finalizeNavigation @ vue-router.js?v=180f7212:2410
+(anonymous) @ vue-router.js?v=180f7212:2320
+Promise.then (async)
+pushWithRedirect @ vue-router.js?v=180f7212:2288
+push @ vue-router.js?v=180f7212:2214
+navigate @ vue-router.js?v=180f7212:1468
+callWithErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1660
+callWithAsyncErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1667
+invoker @ chunk-2FDUVFJ5.js?v=d02d6958:10287
+Show 30 more frames
+Show less
+Sensor.vue:3 [Vue warn]: Property "sensorName" was accessed during render but is not defined on instance. 
+  at <SensorView name="Sensor 1" onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) {…} > > 
+  at <RouterView> 
+  at <App>
+warn$1 @ chunk-2FDUVFJ5.js?v=d02d6958:1513
+get @ chunk-2FDUVFJ5.js?v=d02d6958:4556
+_sfc_render @ Sensor.vue:3
+renderComponentRoot @ chunk-2FDUVFJ5.js?v=d02d6958:2343
+componentUpdateFn @ chunk-2FDUVFJ5.js?v=d02d6958:7533
+run @ chunk-2FDUVFJ5.js?v=d02d6958:430
+instance.update @ chunk-2FDUVFJ5.js?v=d02d6958:7586
+callWithErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1660
+flushJobs @ chunk-2FDUVFJ5.js?v=d02d6958:1866
+Promise.then (async)
+queueFlush @ chunk-2FDUVFJ5.js?v=d02d6958:1775
+queueJob @ chunk-2FDUVFJ5.js?v=d02d6958:1769
+(anonymous) @ chunk-2FDUVFJ5.js?v=d02d6958:7580
+resetScheduling @ chunk-2FDUVFJ5.js?v=d02d6958:513
+triggerEffects @ chunk-2FDUVFJ5.js?v=d02d6958:557
+triggerRefValue @ chunk-2FDUVFJ5.js?v=d02d6958:1317
+set value @ chunk-2FDUVFJ5.js?v=d02d6958:1362
+fetchSensorData @ Sensor.vue:44
+await in fetchSensorData (async)
+(anonymous) @ Sensor.vue:141
+(anonymous) @ chunk-2FDUVFJ5.js?v=d02d6958:4317
+callWithErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1660
+callWithAsyncErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1667
+hook.__weh.hook.__weh @ chunk-2FDUVFJ5.js?v=d02d6958:4297
+flushPostFlushCbs @ chunk-2FDUVFJ5.js?v=d02d6958:1834
+flushJobs @ chunk-2FDUVFJ5.js?v=d02d6958:1872
+Promise.then (async)
+queueFlush @ chunk-2FDUVFJ5.js?v=d02d6958:1775
+queueJob @ chunk-2FDUVFJ5.js?v=d02d6958:1769
+(anonymous) @ chunk-2FDUVFJ5.js?v=d02d6958:7580
+resetScheduling @ chunk-2FDUVFJ5.js?v=d02d6958:513
+triggerEffects @ chunk-2FDUVFJ5.js?v=d02d6958:557
+triggerRefValue @ chunk-2FDUVFJ5.js?v=d02d6958:1317
+set value @ chunk-2FDUVFJ5.js?v=d02d6958:1362
+finalizeNavigation @ vue-router.js?v=180f7212:2410
+(anonymous) @ vue-router.js?v=180f7212:2320
+Promise.then (async)
+pushWithRedirect @ vue-router.js?v=180f7212:2288
+push @ vue-router.js?v=180f7212:2214
+navigate @ vue-router.js?v=180f7212:1468
+callWithErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1660
+callWithAsyncErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1667
+invoker @ chunk-2FDUVFJ5.js?v=d02d6958:10287
+Show 36 more frames
+Show less
+apexcharts.js?v=0f072ba6:702 Error: <svg> attribute height: Expected length, "NaN".
+value @ apexcharts.js?v=0f072ba6:702
+value @ apexcharts.js?v=0f072ba6:6333
+value @ apexcharts.js?v=0f072ba6:6246
+value @ apexcharts.js?v=0f072ba6:8258
+(anonymous) @ apexcharts.js?v=0f072ba6:169
+(anonymous) @ apexcharts.js?v=0f072ba6:8333
+value @ apexcharts.js?v=0f072ba6:8331
+(anonymous) @ apexcharts.js?v=0f072ba6:8417
+setTimeout (async)
+value @ apexcharts.js?v=0f072ba6:8416
+value @ apexcharts.js?v=0f072ba6:8413
+(anonymous) @ apexcharts.js?v=0f072ba6:8227
+Show 11 more frames
+Show less
+apexcharts.js?v=0f072ba6:702 Error: <foreignObject> attribute height: Expected length, "NaN".
+value @ apexcharts.js?v=0f072ba6:702
+value @ apexcharts.js?v=0f072ba6:6246
+value @ apexcharts.js?v=0f072ba6:8258
+(anonymous) @ apexcharts.js?v=0f072ba6:169
+(anonymous) @ apexcharts.js?v=0f072ba6:8333
+value @ apexcharts.js?v=0f072ba6:8331
+(anonymous) @ apexcharts.js?v=0f072ba6:8417
+setTimeout (async)
+value @ apexcharts.js?v=0f072ba6:8416
+value @ apexcharts.js?v=0f072ba6:8413
+(anonymous) @ apexcharts.js?v=0f072ba6:8227
+Show 10 more frames
+Show less
+apexcharts.js?v=0f072ba6:6974 Error: <path> attribute d: Expected number, "M 0 NaN".
+attr @ apexcharts.js?v=0f072ba6:6974
+plot @ apexcharts.js?v=0f072ba6:7246
+path @ apexcharts.js?v=0f072ba6:7250
+value @ apexcharts.js?v=0f072ba6:542
+value @ apexcharts.js?v=0f072ba6:567
+value @ apexcharts.js?v=0f072ba6:5752
+value @ apexcharts.js?v=0f072ba6:5689
+value @ apexcharts.js?v=0f072ba6:6275
+value @ apexcharts.js?v=0f072ba6:8268
+(anonymous) @ apexcharts.js?v=0f072ba6:169
+(anonymous) @ apexcharts.js?v=0f072ba6:8333
+value @ apexcharts.js?v=0f072ba6:8331
+(anonymous) @ apexcharts.js?v=0f072ba6:8417
+setTimeout (async)
+value @ apexcharts.js?v=0f072ba6:8416
+value @ apexcharts.js?v=0f072ba6:8413
+(anonymous) @ apexcharts.js?v=0f072ba6:8227
+Show 16 more frames
+Show less
+9Sensor.vue:125 It is a possibility that you may have not included 'data' property in series.
+value @ apexcharts.js?v=0f072ba6:2045
+value @ apexcharts.js?v=0f072ba6:2114
+value @ apexcharts.js?v=0f072ba6:8265
+(anonymous) @ apexcharts.js?v=0f072ba6:169
+(anonymous) @ apexcharts.js?v=0f072ba6:8333
+value @ apexcharts.js?v=0f072ba6:8331
+(anonymous) @ apexcharts.js?v=0f072ba6:6433
+value @ apexcharts.js?v=0f072ba6:6429
+value @ apexcharts.js?v=0f072ba6:8320
+(anonymous) @ Sensor.vue:125
+setInterval (async)
+pollLiveData @ Sensor.vue:120
+(anonymous) @ Sensor.vue:142
+(anonymous) @ chunk-2FDUVFJ5.js?v=d02d6958:4317
+callWithErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1660
+callWithAsyncErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1667
+hook.__weh.hook.__weh @ chunk-2FDUVFJ5.js?v=d02d6958:4297
+flushPostFlushCbs @ chunk-2FDUVFJ5.js?v=d02d6958:1834
+flushJobs @ chunk-2FDUVFJ5.js?v=d02d6958:1872
+Promise.then (async)
+queueFlush @ chunk-2FDUVFJ5.js?v=d02d6958:1775
+queueJob @ chunk-2FDUVFJ5.js?v=d02d6958:1769
+(anonymous) @ chunk-2FDUVFJ5.js?v=d02d6958:7580
+resetScheduling @ chunk-2FDUVFJ5.js?v=d02d6958:513
+triggerEffects @ chunk-2FDUVFJ5.js?v=d02d6958:557
+triggerRefValue @ chunk-2FDUVFJ5.js?v=d02d6958:1317
+set value @ chunk-2FDUVFJ5.js?v=d02d6958:1362
+finalizeNavigation @ vue-router.js?v=180f7212:2410
+(anonymous) @ vue-router.js?v=180f7212:2320
+Promise.then (async)
+pushWithRedirect @ vue-router.js?v=180f7212:2288
+push @ vue-router.js?v=180f7212:2214
+navigate @ vue-router.js?v=180f7212:1468
+callWithErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1660
+callWithAsyncErrorHandling @ chunk-2FDUVFJ5.js?v=d02d6958:1667
+invoker @ chunk-2FDUVFJ5.js?v=d02d6958:10287
+Show 30 more frames
+Show less
+44Sensor.vue:125 It is a possibility that you may have not included 'data' property in series.
