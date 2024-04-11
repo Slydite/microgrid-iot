@@ -1,10 +1,10 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-from .models import Measurements
+from .models import MeasurementsOne
 
 class MeasurementsType(DjangoObjectType):
     class Meta:
-        model = Measurements
+        model = MeasurementsOne
 
 class Query(graphene.ObjectType):
     all_measurements = graphene.List(MeasurementsType)

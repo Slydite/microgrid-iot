@@ -16,24 +16,36 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Measurements
+from django.http import HttpResponse
+from .models import MeasurementsOne
+from .models import MeasurementsTwo,MeasurementsFive,MeasurementsThree, MeasurementsFour, MeasurementsSix
+@csrf_exempt
+def hello_world(request):
+    return HttpResponse("hello world")
 
 # View to fetch all measurements
+
 @csrf_exempt
-def all_measurements(request):
+def measurements_by_sensor_id(request, table_no, sensor_id):
     if request.method == 'GET':
-        measurements = Measurements.objects.all()
+        if table_no == 1:
+            measurements = MeasurementsOne.objects.filter(sensor_id=sensor_id)
+        elif table_no == 2:
+            measurements = MeasurementsTwo.objects.filter(sensor_id=sensor_id)
+        elif table_no == 3:
+            measurements = MeasurementsThree.objects.filter(sensor_id=sensor_id)
+        elif table_no == 4:
+            measurements = MeasurementsFour.objects.filter(sensor_id=sensor_id)
+        elif table_no == 5:
+            measurements = MeasurementsFive.objects.filter(sensor_id=sensor_id)
+        elif table_no == 6:
+            measurements = MeasurementsSix.objects.filter(sensor_id=sensor_id)    
+        else:
+            return JsonResponse({'error': 'Invalid parameters'}, status=400)
+        
         data = [{'voltage': measurement.voltage, 'time': measurement.time} for measurement in measurements]
+        
         return JsonResponse({'measurements': data})
 
-# View to add a new measurement
-@csrf_exempt
-def add_measurement(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        voltage = data.get('voltage')
-        if voltage is not None:
-            measurement = Measurements.objects.create(voltage=voltage)
-            return JsonResponse({'status': 'Measurement added successfully', 'id': measurement.id})
-        else:
-            return JsonResponse({'error': 'Voltage field is required'}, status=400)
+
+

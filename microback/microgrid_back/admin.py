@@ -4,4 +4,4 @@ from .models import *
 
 
 
-admin.site.register(Measurements)
+admin.site.register(MeasurementsOne)
