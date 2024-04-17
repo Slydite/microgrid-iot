@@ -28,24 +28,21 @@ def hello_world(request):
 @csrf_exempt
 def measurements_by_sensor_id(request, table_no, sensor_id):
     if request.method == 'GET':
-        if table_no == 1:
-            measurements = MeasurementsOne.objects.filter(sensor_id=sensor_id)
-        elif table_no == 2:
-            measurements = MeasurementsTwo.objects.filter(sensor_id=sensor_id)
-        elif table_no == 3:
-            measurements = MeasurementsThree.objects.filter(sensor_id=sensor_id)
-        elif table_no == 4:
-            measurements = MeasurementsFour.objects.filter(sensor_id=sensor_id)
-        elif table_no == 5:
-            measurements = MeasurementsFive.objects.filter(sensor_id=sensor_id)
-        elif table_no == 6:
-            measurements = MeasurementsSix.objects.filter(sensor_id=sensor_id)    
+        model_mapping = {
+            1: MeasurementsOne,
+            2: MeasurementsTwo,
+            3: MeasurementsThree,
+            4: MeasurementsFour,
+            5: MeasurementsFive,
+            6: MeasurementsSix
+        }
+        if table_no in model_mapping:
+            model_class = model_mapping[table_no]
+            measurements = model_class.objects.filter(sensor_id=sensor_id).order_by('-time')[:1000]
+            data = [{'voltage': measurement.voltage, 'time': measurement.time} for measurement in measurements]
+            return JsonResponse({'measurements': data})
         else:
             return JsonResponse({'error': 'Invalid parameters'}, status=400)
-        
-        data = [{'voltage': measurement.voltage, 'time': measurement.time} for measurement in measurements]
-        
-        return JsonResponse({'measurements': data})
 
 
 

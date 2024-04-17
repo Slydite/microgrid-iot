@@ -11,13 +11,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="measurement in measurements" :key="measurement.time">
+          <tr v-for="measurement in slicedMeasurements" :key="measurement.time">
             <td>{{ measurement.time }}</td>
             <td>{{ measurement.voltage }}</td>
           </tr>
         </tbody>
+        
       </table>
     </div>
+
+    <br></br>
+    <br></br>
     <!-- Static ApexCharts example -->
     <div id="staticChart"></div>
     <!-- Live ApexCharts example -->
@@ -26,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted} from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import type { Ref } from 'vue';
 import axios from 'axios';
 import ApexCharts, { type ApexOptions } from 'apexcharts';
@@ -188,7 +192,11 @@ const pollLiveData = () => {
       pollLiveData();
     });
 
-    return { measurements, staticChart, liveChart };
+    const slicedMeasurements = computed(() => {
+      return measurements.value.slice(0, 10);
+    });
+
+    return { measurements, staticChart, liveChart, slicedMeasurements };
   }
 });
 </script>
