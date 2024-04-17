@@ -24,8 +24,6 @@
     <br></br>
     <!-- Static ApexCharts example -->
     <div id="staticChart"></div>
-    <!-- Live ApexCharts example -->
-    <div id="liveChart"></div>
   </div>
 </template>
 
@@ -45,20 +43,34 @@ export default defineComponent({
   setup() {
     const measurements: Ref<Measurement[]> = ref([]);
     const staticChart: Ref<ApexCharts | null> = ref(null);
-    const liveChart: Ref<ApexCharts | null> = ref(null);
 
-    // Function to fetch sensor data from the backend
-    const fetchSensorData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/microgrid_back/measurements/1/6/');
-        measurements.value = response.data.measurements;
-        updateStaticChart();
-      } catch (error) {
-        console.error('Error during Axios GET request:', error);
-      }
-    };
+      const fetchSensorData = async () => {
+  try {
+    let url;
+    const currentHour = new Date().getHours();
+    
+    if (currentHour >= 0 && currentHour < 4) {
+      url = 'http://localhost:8000/microgrid_back/measurements/1/6/';
+    } else if (currentHour >= 4 && currentHour < 8) {
+      url = 'http://localhost:8000/microgrid_back/measurements/2/6/';
+    } else if (currentHour >= 8 && currentHour < 12) {
+      url = 'http://localhost:8000/microgrid_back/measurements/3/6/';
+    } else if (currentHour >= 12 && currentHour < 16) {
+      url = 'http://localhost:8000/microgrid_back/measurements/4/6/';
+    } else if (currentHour >= 16 && currentHour < 20) {
+      url = 'http://localhost:8000/microgrid_back/measurements/5/6/';
+    } else {
+      url = 'http://localhost:8000/microgrid_back/measurements/6/6/';
+    }
 
-    // Initialize the static chart with empty data
+    const response = await axios.get(url);
+    measurements.value = response.data.measurements;
+    updateStaticChart();
+  } catch (error) {
+    console.error('Error during Axios GET request:', error);
+  }
+};
+
     const initStaticChart = () => {
       const options: ApexOptions = {
         chart: {
@@ -79,21 +91,20 @@ export default defineComponent({
         }],
         xaxis: {
           type: 'datetime',
+          tickAmount: 10,
           labels: {
-    formatter: function(value, timestamp) {
-      // Check if timestamp is defined to avoid TypeScript error
-      if (typeof timestamp !== 'undefined') {
-        return new Date(timestamp).toISOString().slice(17, 23); // Display only the seconds and microseconds
-      }
-      return ''; // Return an empty string or some default value if timestamp is undefined
-    }
-  },
-          tickAmount: 10, // Adjust this value as needed for your data
-          range: 1000 // This will need to be adjusted based on the actual range of your data
+            formatter: function(value, timestamp) {
+              if (typeof timestamp !== 'undefined') {
+                return new Date(timestamp).toISOString().slice(17, 23);
+              }
+              return '';
+            }
+          },
+          range: 1000
         },
         tooltip: {
           x: {
-            format: 'HH:mm:ss.SSS' // Format tooltip to show hours, minutes, seconds, and milliseconds
+            format: 'HH:mm:ss.SSS'
           }
         },
         theme: {
@@ -105,98 +116,33 @@ export default defineComponent({
       staticChart.value.render();
     };
 
-    // Update the static chart with new data
     const updateStaticChart = () => {
-  if (staticChart.value) {
-    const seriesData = measurements.value.map(m => {
-      // Ensure that m.time is not undefined
-      const time = m.time ? new Date(m.time) : new Date();
-      return {
-        x: time,
-        y: parseFloat(m.voltage)
-      };
-    });
+      if (staticChart.value) {
+        const seriesData = measurements.value.map(m => {
+          const time = new Date(m.time).getTime();
+          return {
+            x: time,
+            y: parseFloat(m.voltage)
+          };
+        });
 
-    staticChart.value.updateSeries([{ data: seriesData }]);
-  }
-};
-
-    // Initialize the live chart with empty data
-    const initLiveChart = () => {
-      const options: ApexOptions = {
-        chart: {
-          type: 'line',
-          height: 'auto',
-          animations: {
-            enabled: true,
-            dynamicAnimation: {
-              speed: 1000
-            }
-          }
-        },
-        series: [{
-          name: 'Live Voltage',
-          data: []
-        }],
-        xaxis: {
-          type: 'datetime',
-          labels: {
-    formatter: function(value, timestamp) {
-      // Check if timestamp is defined to avoid TypeScript error
-      if (typeof timestamp !== 'undefined') {
-        return new Date(timestamp).toISOString().slice(17, 23); // Display only the seconds and microseconds
+        staticChart.value.updateSeries([{ data: seriesData }]);
       }
-      return ''; // Return an empty string or some default value if timestamp is undefined
-    }
-  },
-          tickAmount: 1, // Adjust this value as needed for your data
-          range: 10 // This will need to be adjusted based on the actual range of your data
-        },
-        tooltip: {
-          x: {
-            format: 'HH:mm:ss.SSS' // Format tooltip to show hours, minutes, seconds, and milliseconds
-          }
-        },
-        theme: {
-          mode: 'dark'
-        }
-      };
-
-      liveChart.value = new ApexCharts(document.querySelector("#liveChart"), options);
-      liveChart.value.render();
     };
 
-// Poll for live data every second and update the live chart
-const pollLiveData = () => {
-  setInterval(async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/microgrid_back/measurements/1/6/');
-      const latestMeasurement = response.data.measurements[response.data.measurements.length - 1];
-      if (liveChart.value && latestMeasurement.time) {
-        const time = new Date(latestMeasurement.time);
-        const voltage = parseFloat(latestMeasurement.voltage);
-        liveChart.value.appendData([{
-          data: [{ x: time, y: voltage }]
-        }]);
-      }
-    } catch (error) {
-      console.error('Error during live data polling:', error);
-    }
-  }, 5000);
-};
-
     onMounted(() => {
-      initStaticChart();
-      initLiveChart();
       fetchSensorData();
-      pollLiveData();
+      initStaticChart();
+      
+      // Refresh chart data every 2 seconds
+      setInterval(fetchSensorData, 2000);
     });
 
     const slicedMeasurements = computed(() => {
       return measurements.value.slice(0, 10);
     });
 
-    return { measurements, staticChart, liveChart, slicedMeasurements };
+    return { measurements, staticChart, slicedMeasurements };
   }
 });
 </script>
