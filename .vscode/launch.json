@@ -6,7 +6,7 @@
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceFolder}/microfront",
-            "runtimeExecutable": "pnpm",
+            "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "run",
                 "dev"

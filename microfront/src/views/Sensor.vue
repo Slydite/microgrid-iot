@@ -48,20 +48,20 @@ export default defineComponent({
   try {
     let url;
     const currentHour = new Date().getHours();
-    
-    if (currentHour >= 0 && currentHour < 4) {
-      url = 'http://localhost:8000/microgrid_back/measurements/1/6/';
-    } else if (currentHour >= 4 && currentHour < 8) {
-      url = 'http://localhost:8000/microgrid_back/measurements/2/6/';
-    } else if (currentHour >= 8 && currentHour < 12) {
-      url = 'http://localhost:8000/microgrid_back/measurements/3/6/';
-    } else if (currentHour >= 12 && currentHour < 16) {
-      url = 'http://localhost:8000/microgrid_back/measurements/4/6/';
-    } else if (currentHour >= 16 && currentHour < 20) {
-      url = 'http://localhost:8000/microgrid_back/measurements/5/6/';
-    } else {
-      url = 'http://localhost:8000/microgrid_back/measurements/6/6/';
-    }
+    url = 'http://localhost:8000/microgrid_back/measurements/6/6/';
+    // if (currentHour >= 0 && currentHour < 4) {
+    //   url = 'http://localhost:8000/microgrid_back/measurements/1/6/';
+    // } else if (currentHour >= 4 && currentHour < 8) {
+    //   url = 'http://localhost:8000/microgrid_back/measurements/2/6/';
+    // } else if (currentHour >= 8 && currentHour < 12) {
+    //   url = 'http://localhost:8000/microgrid_back/measurements/3/6/';
+    // } else if (currentHour >= 12 && currentHour < 16) {
+    //   url = 'http://localhost:8000/microgrid_back/measurements/4/6/';
+    // } else if (currentHour >= 16 && currentHour < 20) {
+    //   url = 'http://localhost:8000/microgrid_back/measurements/5/6/';
+    // } else {
+    //   url = 'http://localhost:8000/microgrid_back/measurements/6/6/';
+    // }
 
     const response = await axios.get(url);
     measurements.value = response.data.measurements;
@@ -135,7 +135,7 @@ export default defineComponent({
       initStaticChart();
       
       // Refresh chart data every 2 seconds
-      setInterval(fetchSensorData, 2000);
+      setInterval(fetchSensorData, 5000);
     });
 
     const slicedMeasurements = computed(() => {
@@ -152,7 +152,9 @@ export default defineComponent({
 .home {
   padding: 1rem;
 }
-
+h1{
+  color: white;
+}
 .home-table {
   margin-top: 2rem;
 }
@@ -167,6 +169,7 @@ td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
+  color: white;
 }
 
 th {
