@@ -64,7 +64,7 @@ export default defineComponent({
       return measurement.value?.voltage.slice(-10).map(voltageTuple => {
         const voltageValue = voltageTuple[0];
         const deltaTime = parseFloat(voltageTuple[1]);
-        const measurementTime = new Date(startTime.value.getTime() + deltaTime*1000).toISOString();
+        const measurementTime = new Date(startTime.value.getTime() + deltaTime).toISOString();
         return {
           voltage: voltageValue,
           time: measurementTime
@@ -76,8 +76,8 @@ export default defineComponent({
       const options: ApexOptions = {
         chart: {
           type: 'line',
-          height: 'auto',
-          width: 1000,
+          height: 1000,
+          width: 2000,
           zoom: {
             enabled: true,
             type: 'x',  
@@ -93,32 +93,22 @@ export default defineComponent({
         }],
         xaxis: {
           type: 'datetime',
-          tickAmount: 10,
-          labels: {
-            formatter: function(value, timestamp) {
-              if (typeof timestamp !== 'undefined') {
-                return new Date(timestamp).toISOString().slice(11, 23);
-              }
-              return '';
-            }
-          },//BT
-          range: 1000, // 1 second range for 1000Hz polling rate
-          min: startTime.value.getTime(), // Use the startTime ref for the minimum value
-          max: startTime.value.getTime() + 999  // Use the startTime ref + 999 seconds for the maximum value
-        },
-        yaxis: {
-          min: -300, // Set the minimum value of y-axis to -300
-          max: 300, // Set the maximum value of y-axis to 300
-          tickAmount: 10
         },
         tooltip: {
-          x: {
-            format: 'HH:mm:ss.SSS'
-          }
-        },
+                    x: {
+                      formatter: function(value, timestamp) {
+              
+                return new Date(value).toISOString().slice(11, 23);
+                // return "sir time dekhlena"+value;
+              
+              
+            }
+                    }
+                  },
         theme: {
           mode: 'dark'
         }
+
       };
 
       staticChart.value = new ApexCharts(document.querySelector("#staticChart"), options);
@@ -126,42 +116,77 @@ export default defineComponent({
     };
 
     const updateStaticChart = () => {
-    if (staticChart.value && measurement.value) {
-      const seriesData = measurement.value.voltage.map(voltageTuple => {
-        const voltageValue = voltageTuple[0];
-        const deltaTime = parseFloat(voltageTuple[1]);
-        const timeValue = new Date(startTime.value.getTime() + deltaTime * 1000);
-        return {
-          x: timeValue.getTime(),
-          y: parseFloat(voltageValue)
-        };
-      });
+      if (staticChart.value && measurement.value) 
+      {
+          const seriesData = measurement.value.voltage.map(voltageTuple => {
+          const voltageValue = voltageTuple[0];
+          const deltaTime = parseFloat(voltageTuple[1]);
+          const timeValue =  new Date(startTime.value.getTime() + deltaTime).toISOString();
+          return {
+              x: timeValue,
+              y: parseFloat(voltageValue)
+          };
+          });
 
-      // Update the series data
-      staticChart.value.updateSeries([{ data: seriesData }]);
+          // Update the series data
+          staticChart.value.updateSeries([{
+            name: 'Voltage',
+            data: seriesData
+          }]);
+          
+          /* const options: ApexOptions = {
+              chart: {
+                type: 'line',
+                height: 'auto',
+                width: 1000,
+                zoom: {
+                  enabled: true,
+                  type: 'x',  
+                  autoScaleYaxis: true  
+                },
+                toolbar: {
+                  autoSelected: 'zoom' 
+                }
+              },
+              series: [{
+                name: 'Voltage',
+                data: seriesData
+              }],
+              xaxis: {
+                type: 'datetime', // Specify datetime type for x-axis
+                tickAmount: 10,
+                    labels: {
+                      formatter: function(value, timestamp) {
+                        if (typeof timestamp !== 'undefined') {
+                          return new Date(timestamp).toISOString().slice(11, 23);
+                        }
+                        return '';
+                      }
+                    },//BT
+                    range: 1000, // 1 second range for 1000Hz polling rate
+                    min: startTime.value.getTime(), // Use the startTime ref for the minimum value
+                    max: startTime.value.getTime() + 999  // Use the startTime ref + 999 seconds for the maximum value
+                
 
-      // Update the x-axis labels to reflect the new time
-      staticChart.value.updateOptions({
-        xaxis: {
-          min: startTime.value.getTime(),
-          max: startTime.value.getTime() + (measurement.value.voltage.length - 1) * 1000,
-          tickAmount: 10, // Adjust this value as needed for your desired number of ticks
-          labels: {
-            formatter: function(value: any, timestamp: string | number | Date) {
-              if (typeof timestamp !== 'undefined' && typeof value !== 'undefined') {
-                return new Date(timestamp).toISOString().slice(11, 23);
+              },
+              tooltip: {
+                    x: {
+                      format: 'HH:mm:ss.SSS'
+                    }
+                  },
+              theme: {
+                mode: 'dark'
               }
-              return '';}
-          }
+            }; */
+          // staticChart.value.render();
         }
-      }, false, true); // The second parameter (false) prevents the chart from re-rendering entirely
-    }
+
   };
 
     onMounted(() => {
       fetchSensorData();
       initStaticChart();
-      setInterval(fetchSensorData, 1000);
+      setInterval(fetchSensorData, 50000);
     });
 
     return {
