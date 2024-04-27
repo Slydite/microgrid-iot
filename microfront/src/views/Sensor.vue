@@ -186,7 +186,7 @@ export default defineComponent({
     onMounted(() => {
       fetchSensorData();
       initStaticChart();
-      setInterval(fetchSensorData, 50000);
+      setInterval(fetchSensorData, 3000);
     });
 
     return {
