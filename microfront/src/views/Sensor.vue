@@ -11,71 +11,73 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="measurement in slicedMeasurements" :key="measurement.time">
-            <td>{{ measurement.time }}</td>
-            <td>{{ measurement.voltage }}</td>
+          <tr v-for="(data, index) in recentVoltageData" :key="index">
+            <td>{{ data.time }}</td>
+            <td>{{ data.voltage }}</td>
           </tr>
         </tbody>
-        
       </table>
     </div>
 
-    <br></br>
-    <br></br>
-    <!-- Static ApexCharts example -->
+    <!-- Chart placeholder -->
     <div id="staticChart"></div>
   </div>
 </template>
 
+
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from 'vue';
-import type { Ref } from 'vue';
+import { defineComponent, ref, computed, onMounted, type Ref } from 'vue';
 import axios from 'axios';
 import ApexCharts, { type ApexOptions } from 'apexcharts';
 
-interface Measurement {
-  time: string;
+interface VoltageMeasurement {
+  voltage: [string, string][]; // 2D array of voltage and deltaT
+  time: string; // Start time
+}
+
+interface VoltageData {
   voltage: string;
+  time: string;
 }
 
 export default defineComponent({
   name: 'SensorView',
   setup() {
-    const measurements: Ref<Measurement[]> = ref([]);
+    const measurement: Ref<VoltageMeasurement | null> = ref(null);
     const staticChart: Ref<ApexCharts | null> = ref(null);
+    const startTime: Ref<Date> = ref(new Date());
 
-      const fetchSensorData = async () => {
-  try {
-    let url;
-    const currentHour = new Date().getHours();
-    url = 'http://localhost:8000/microgrid_back/measurements/6/6/';
-    // if (currentHour >= 0 && currentHour < 4) {
-    //   url = 'http://localhost:8000/microgrid_back/measurements/1/6/';
-    // } else if (currentHour >= 4 && currentHour < 8) {
-    //   url = 'http://localhost:8000/microgrid_back/measurements/2/6/';
-    // } else if (currentHour >= 8 && currentHour < 12) {
-    //   url = 'http://localhost:8000/microgrid_back/measurements/3/6/';
-    // } else if (currentHour >= 12 && currentHour < 16) {
-    //   url = 'http://localhost:8000/microgrid_back/measurements/4/6/';
-    // } else if (currentHour >= 16 && currentHour < 20) {
-    //   url = 'http://localhost:8000/microgrid_back/measurements/5/6/';
-    // } else {
-    //   url = 'http://localhost:8000/microgrid_back/measurements/6/6/';
-    // }
+    const fetchSensorData = async () => {
+      try {
+        const url = 'http://localhost:8000/microgrid_back/measurements/6/6/';
+        const response = await axios.get(url);
+        const data: VoltageMeasurement = response.data.measurements;
+        startTime.value = new Date(data.time);
+        measurement.value = data;
+        updateStaticChart();
+      } catch (error) {
+        console.error('Error during Axios GET request:', error);
+      }
+    };
 
-    const response = await axios.get(url);
-    measurements.value = response.data.measurements;
-    updateStaticChart();
-  } catch (error) {
-    console.error('Error during Axios GET request:', error);
-  }
-};
+    const recentVoltageData = computed((): VoltageData[] => {
+      return measurement.value?.voltage.slice(-10).map(voltageTuple => {
+        const voltageValue = voltageTuple[0];
+        const deltaTime = parseFloat(voltageTuple[1]);
+        const measurementTime = new Date(startTime.value.getTime() + deltaTime*1000).toISOString();
+        return {
+          voltage: voltageValue,
+          time: measurementTime
+        };
+      }) || [];
+    });
 
     const initStaticChart = () => {
       const options: ApexOptions = {
         chart: {
           type: 'line',
           height: 'auto',
+          width: 1000,
           zoom: {
             enabled: true,
             type: 'x',  
@@ -95,12 +97,19 @@ export default defineComponent({
           labels: {
             formatter: function(value, timestamp) {
               if (typeof timestamp !== 'undefined') {
-                return new Date(timestamp).toISOString().slice(17, 23);
+                return new Date(timestamp).toISOString().slice(11, 23);
               }
               return '';
             }
-          },
-          range: 1000
+          },//BT
+          range: 1000, // 1 second range for 1000Hz polling rate
+          min: startTime.value.getTime(), // Use the startTime ref for the minimum value
+          max: startTime.value.getTime() + 999  // Use the startTime ref + 999 seconds for the maximum value
+        },
+        yaxis: {
+          min: -300, // Set the minimum value of y-axis to -300
+          max: 300, // Set the maximum value of y-axis to 300
+          tickAmount: 10
         },
         tooltip: {
           x: {
@@ -117,35 +126,51 @@ export default defineComponent({
     };
 
     const updateStaticChart = () => {
-      if (staticChart.value) {
-        const seriesData = measurements.value.map(m => {
-          const time = new Date(m.time).getTime();
-          return {
-            x: time,
-            y: parseFloat(m.voltage)
-          };
-        });
+    if (staticChart.value && measurement.value) {
+      const seriesData = measurement.value.voltage.map(voltageTuple => {
+        const voltageValue = voltageTuple[0];
+        const deltaTime = parseFloat(voltageTuple[1]);
+        const timeValue = new Date(startTime.value.getTime() + deltaTime * 1000);
+        return {
+          x: timeValue.getTime(),
+          y: parseFloat(voltageValue)
+        };
+      });
 
-        staticChart.value.updateSeries([{ data: seriesData }]);
-      }
-    };
+      // Update the series data
+      staticChart.value.updateSeries([{ data: seriesData }]);
+
+      // Update the x-axis labels to reflect the new time
+      staticChart.value.updateOptions({
+        xaxis: {
+          min: startTime.value.getTime(),
+          max: startTime.value.getTime() + (measurement.value.voltage.length - 1) * 1000,
+          tickAmount: 10, // Adjust this value as needed for your desired number of ticks
+          labels: {
+            formatter: function(value: any, timestamp: string | number | Date) {
+              if (typeof timestamp !== 'undefined' && typeof value !== 'undefined') {
+                return new Date(timestamp).toISOString().slice(11, 23);
+              }
+              return '';}
+          }
+        }
+      }, false, true); // The second parameter (false) prevents the chart from re-rendering entirely
+    }
+  };
 
     onMounted(() => {
       fetchSensorData();
       initStaticChart();
-      
-      // Refresh chart data every 2 seconds
-      setInterval(fetchSensorData, 5000);
+      setInterval(fetchSensorData, 1000);
     });
 
-    const slicedMeasurements = computed(() => {
-      return measurements.value.slice(0, 10);
-    });
-
-    return { measurements, staticChart, slicedMeasurements };
+    return {
+      recentVoltageData
+    };
   }
 });
 </script>
+
 
 
 <style scoped>

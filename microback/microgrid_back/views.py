@@ -38,11 +38,20 @@ def measurements_by_sensor_id(request, table_no, sensor_id):
         }
         if table_no in model_mapping:
             model_class = model_mapping[table_no]
-            measurements = model_class.objects.filter(sensor_id=sensor_id).order_by('-time')[:1000]
-            data = [{'voltage': measurement.voltage, 'time': measurement.time} for measurement in measurements]
-            return JsonResponse({'measurements': data})
+            # Fetch the latest measurement
+            latest_measurement = model_class.objects.filter(sensor_id=sensor_id).order_by('-time').first()
+            if latest_measurement:
+                # Assuming 'voltage' is now an array field in your model
+                data = {
+                    'voltage': latest_measurement.voltage,
+                    'time': latest_measurement.time
+                }
+                return JsonResponse({'measurements': data})
+            else:
+                return JsonResponse({'error': 'No measurements found'}, status=404)
         else:
             return JsonResponse({'error': 'Invalid parameters'}, status=400)
+
 
 
 

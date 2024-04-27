@@ -7,7 +7,7 @@ import datetime
 from numba import jit
 # Constants for the sine wave
 AMPLITUDE = 240
-NOISE_LEVEL = 10
+NOISE_LEVEL = 5
 SAMPLES = 1000
 
 # Variable to specify sensor_id
@@ -47,21 +47,20 @@ import datetime
 def insert_voltage_array(curr_id, connection, voltage_array, start_time):
     cursor = connection.cursor()
     
-    # Calculate RMS value
-    rms_value = np.sqrt(np.mean(np.square(voltage_array[:, 0])))
-    print(rms_value)
-    
     # Prepare the voltage array for insertion
+    # The voltage array is already formatted correctly from the generate_synthetic_data function
     voltage_list = voltage_array.tolist()
     timestamp = start_time.isoformat()
     query = """
-    INSERT INTO microgrid_back_measurementssix(id, sensor_id, voltage, time, rmsvalue)
-    VALUES (%s, %s, %s::numeric[], %s, %s);
+    INSERT INTO microgrid_back_measurementssix(id, sensor_id, voltage, time)
+    VALUES (%s, %s, %s::numeric[], %s);
     """
+    # Convert the list to a string representation of a PostgreSQL array
     voltage_array_str = str(voltage_list).replace('[', '{').replace(']', '}')
-    cursor.execute(query, (curr_id, sensor_id, voltage_array_str, timestamp, rms_value))
+    cursor.execute(query, (curr_id, sensor_id, voltage_array_str, timestamp))
     connection.commit()
     cursor.close()
+
 
 
 # Function to generate synthetic sine wave data with disturbances
@@ -70,8 +69,8 @@ def generate_synthetic_data():
     start_time = datetime.datetime.now(datetime.timezone.utc)
     time_array = np.linspace(0, 1, SAMPLES, endpoint=False)
     voltage_array = AMPLITUDE * np.sin(2 * np.pi * 50 * time_array)
-    noise = np.random.uniform(-NOISE_LEVEL, NOISE_LEVEL, SAMPLES)
-    voltage_array += noise
+    # noise = np.random.uniform(-NOISE_LEVEL, NOISE_LEVEL, SAMPLES)
+    # voltage_array += noise
     formatted_voltage_array = np.column_stack((np.round(voltage_array, 2), (time_array * 1000).astype(int)))
     return formatted_voltage_array, start_time
 
@@ -86,7 +85,6 @@ try:
         insert_voltage_array(max_id, connection, voltage_array, start_time)
         max_id +=1
         print(f"Inserted a batch of {SAMPLES} values into the database. at t={start_time}")
-        
         time.sleep(1)  # Wait for 1 second before the next batch
 
 except KeyboardInterrupt:
