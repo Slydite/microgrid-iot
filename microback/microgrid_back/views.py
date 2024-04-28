@@ -8,7 +8,7 @@
     
     # Print the data
 #    for measurement in measurements:
-#        print(f"Voltage: {measurement.voltage}, Time: {measurement.time}")
+#        print(f"Sensdata: {measurement.sensdata}, Time: {measurement.time}")
     
 #    return render(request, 'measurements.html', {'measurements': measurements})
 # microback/micro_back/views.py
@@ -41,10 +41,15 @@ def measurements_by_sensor_id(request, table_no, sensor_id):
             # Fetch the latest measurement
             latest_measurement = model_class.objects.filter(sensor_id=sensor_id).order_by('-time').first()
             if latest_measurement:
-                # Assuming 'voltage' is now an array field in your model
+                # Assuming 'sensdata' is now an array field in your model
                 data = {
-                    'voltage': latest_measurement.voltage,
-                    'time': latest_measurement.time
+                    'sensdata': latest_measurement.sensdata,
+                    'time': latest_measurement.time,
+                    'rms': latest_measurement.rmsvalue,
+                    'pf': latest_measurement.pf,
+                    'thd': latest_measurement.thd,
+                    'sname': latest_measurement.sname,
+                    'stype': latest_measurement.stype,
                 }
                 return JsonResponse({'measurements': data})
             else:

@@ -14,24 +14,24 @@ class Query(graphene.ObjectType):
 
 class CreateMeasurement(graphene.Mutation):
     class Arguments:
-        voltage = graphene.Float(required=True)
+        sensdata = graphene.Float(required=True)
 
     measurement = graphene.Field(MeasurementsType)
 
-    def mutate(self, info, voltage):
-        measurement = Measurements.objects.create(voltage=voltage)
+    def mutate(self, info, sensdata):
+        measurement = Measurements.objects.create(sensdata=sensdata)
         return CreateMeasurement(measurement=measurement)
 
 class UpdateMeasurement(graphene.Mutation):
     class Arguments:
         id = graphene.Int(required=True)
-        voltage = graphene.Float(required=True)
+        sensdata = graphene.Float(required=True)
 
     measurement = graphene.Field(MeasurementsType)
 
-    def mutate(self, info, id, voltage):
+    def mutate(self, info, id, sensdata):
         measurement = Measurements.objects.get(pk=id)
-        measurement.voltage = voltage
+        measurement.sensdata = sensdata
         measurement.save()
         return UpdateMeasurement(measurement=measurement)
 

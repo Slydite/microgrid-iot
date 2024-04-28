@@ -1,40 +1,3 @@
-<script setup lang="ts">
-import { ref, type Ref } from 'vue';
-import { RouterLink, RouterView, useRoute } from 'vue-router';
-import { HomeIcon, BoltIcon, PlusIcon } from '@heroicons/vue/24/solid';
-
-interface Sensor {
-  name: string;
-  path: string;
-  icon: any; // Use appropriate type for your icon components
-}
-
-const sensors: Ref<Array<Sensor>> = ref([
-  { name: 'Home', path: '/', icon: HomeIcon },
-  { name: 'Sensor 1', path: '/sensor', icon: BoltIcon },
-  // ... more sensors
-]);
-
-// Function to add a new sensor
-function addSensor(name: string) {
-  const NewIcon = BoltIcon; // Placeholder for new sensor icon
-  sensors.value.push({ name, path: '/sensor', icon: NewIcon });
-}
-
-// Function to remove a sensor by name
-function removeSensor(name: string) {
-  sensors.value = sensors.value.filter(sensor => sensor.name !== name);
-}
-
-// Function to add a placeholder sensor when the plus button is clicked
-function addPlaceholderSensor() {
-  const newSensorName = `Sensor ${sensors.value.length}`;
-  addSensor(newSensorName);
-}
-
-const route = useRoute();
-</script>
-
 <template>
   <div id="app">
     <header>
@@ -46,7 +9,7 @@ const route = useRoute();
         <ul>
           <li v-for="sensor in sensors" :key="sensor.name">
             <!-- Pass the sensor name as a route query parameter -->
-            <router-link :to="{ path: sensor.path, query: { name: sensor.name } }">
+            <router-link :to="{ path: sensor.path, query: { number: sensor.number } }">
               <component :is="sensor.icon" class="icon" />
               <span class="text">{{ sensor.name }}</span>
             </router-link>
@@ -67,8 +30,46 @@ const route = useRoute();
   </div>
 </template>
 
+<script setup lang="ts">
+import { ref, type Ref } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { HomeIcon, BoltIcon, PlusIcon } from '@heroicons/vue/24/solid'
 
-<style>:root {
+interface Sensor {
+  number: number
+  name: string
+  path: string
+  icon: any // Use appropriate type for your icon components
+}
+
+const sensors: Ref<Array<Sensor>> = ref([
+  // { name: 'Sensor 1', path: '/sensor', icon: BoltIcon },
+  // { name: 'Sensor 2', path: '/sensor', icon: BoltIcon }
+])
+
+// Function to add a new sensor
+function addSensor(name: string) {
+  const NewIcon = BoltIcon // Placeholder for new sensor icon
+  const sensorNumber = sensors.value.length + 1
+  sensors.value.push({ number: sensorNumber, name, path: '/sensor', icon: NewIcon })
+}
+
+// Function to remove a sensor by name
+function removeSensor(name: string) {
+  sensors.value = sensors.value.filter((sensor) => sensor.name !== name)
+}
+
+// Function to add a placeholder sensor when the plus button is clicked
+function addPlaceholderSensor() {
+  const newSensorName = `Sensor ${sensors.value.length + 1}`
+  addSensor(newSensorName)
+}
+
+const route = useRoute()
+</script>
+
+<style>
+:root {
   --color-background: #222222; /* Darker green background */
   --color-header-sidebar: #090b09; /* Even darker green for header and sidebar */
   --color-text: #ffffff; /* White text color */
@@ -97,7 +98,7 @@ header {
   z-index: 1000; /* Ensure the header is above other elements */
 }
 
-input[type="search"] {
+input[type='search'] {
   margin-left: auto;
   background-color: #022c1a; /* Darker green background for search input */
   color: var(--color-text); /* White color for search input text */
@@ -112,7 +113,7 @@ aside {
   position: fixed;
   top: 10vh;
   left: 0;
-  height: calc(90vh );
+  height: calc(90vh);
   overflow-y: auto;
   background-color: var(--color-header-sidebar);
   z-index: 1100; /* Higher z-index for the sidebar to be clickable */
@@ -162,7 +163,9 @@ aside nav ul li button:hover {
 .text {
   white-space: nowrap;
   overflow: hidden;
-  transition: opacity 0.5s, max-width 0.5s;
+  transition:
+    opacity 0.5s,
+    max-width 0.5s;
   opacity: 0;
   max-width: 0;
 }
@@ -220,6 +223,4 @@ main {
     margin-top: 60px;
   }
 }
-
 </style>
-
